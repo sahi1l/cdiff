@@ -7,17 +7,30 @@ import re
 import os
 import glob
 from termcolor import colored as col
-
-dir1 = sys.argv[1]
-dir2 = sys.argv[2]
-dir1 = glob.glob(dir1)[0].rstrip("/")
-dir2 = glob.glob(dir2)[0].rstrip("/")
 color1 = "red"
 color2 = "cyan"
+colorB = "magenta"
+try:
+    dir1 = sys.argv[1]
+    dir2 = sys.argv[2]
+except IndexError:
+    print(f"Usage: {sys.argv[0]} <directory1> <directory2>")
+    print("Color-coding and prefixes:")
+    print(col("<File only exists in the first directory",color1))
+    print(col(">File only exists in the second directory",color2))
+    print(col("*File exists in both directories, in different forms",colorB))
+    exit()
+
+D1 = glob.glob(dir1)
+D2 = glob.glob(dir2)
+if not D1: print(f"File {dir1} not found.")
+if not D2: print(f"File {dir2} not found.")
+if (not D1) or (not D2): exit()
+dir1 = D1[0].rstrip("/")
+dir2 = D2[0].rstrip("/")
 print("DIR1: ",col(dir1,color1))
 print("DIR2: ",col(dir2,color2))
 mode = ""
-binary_color="grey"
 drawline = "="*80
 def hilite_path(path):
     dir = os.path.dirname(path)
@@ -41,15 +54,15 @@ for line in stream:
     
     if M:=re.match(f"Files {dir1}/(.*) and {dir2}/(.*) differ",line):
         inBoth += [M.group(1)]
-        print(col(inBoth[-1],"magenta"))
+        print("* "+col(inBoth[-1],colorB))
         
     elif M:=re.match(f"Only in {dir1}/?(.*): (.*)$",line):
         inA += [M.group(1)+"/"+M.group(2)]
-        print(col(inA[-1],color1))
+        print("< "+col(inA[-1],color1))
 
     elif M:=re.match(f"Only in {dir2}/?(.*): (.*)$",line):
         inB += [M.group(1)+"/"+M.group(2)]
-        print(col(inB[-1],color2))
+        print("> "+col(inB[-1],color2))
 
     else:
         print(line)
@@ -61,6 +74,6 @@ for line in stream:
 #    for x in inB:
 #        print(col(x,color2))
 #    for x in inBoth:
-#        print(col(x,"magenta"))
+#        print(col(x,colorB))
 #except KeyboardInterrupt:
 #    print("--")
