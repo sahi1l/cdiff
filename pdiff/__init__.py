@@ -9,7 +9,7 @@ import glob
 from termcolor import colored
 from pdiff.accumulator import TextAccumulator
 DEBUG = False
-EXCLUDE = [".DS_Store",".saves"]
+EXCLUDE = [".DS_Store",".saves","__pycache__"]
 COLORS = {
     "": "white",
     "A": "red",
@@ -28,7 +28,7 @@ def simplify_path(path,dirs):
     """replace dir1 or dir2 with ==A== or ==B==, to shorten lines"""
     for ab in dirs: #pylint: disable=invalid-name
         if path.startswith(dirs[ab]):
-            return path.replace(dirs[ab], f"«{ab}»")
+            return path.replace(dirs[ab], f"«{ab}»",1)
     return path
 def get_which(path, dirs):
     """from the directory name of path, determine which branch it is"""
