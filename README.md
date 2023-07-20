@@ -1,6 +1,6 @@
 pdiff is a command-line function, which restyles the output of the FSF's "diff" function for easier (IMO) reading, especially when applied to directories.  
 
-![example of cdiff output](doc/pdiff.png)
+![example of pdiff output](doc/pdiff.png)
 
 It uses color to distinguish between elements from the two directories:
 ![red for the first directory, cyan for the second, magenta for both](doc/colorcode.png)
